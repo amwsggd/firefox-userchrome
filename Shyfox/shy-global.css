@@ -9,9 +9,6 @@ Beautification removed: rounded corners, outlines, shadows, accent color theming
 Area where website is displayed
 */
 
-/* set background color */
-#appcontent .browserStack, #browser, .browserContainer {background: var(--bg-col)}
-
 #browser #tabbrowser-tabbox {
   /* shift website content relative to panels */
   margin-left: var(--left-margin) !important;

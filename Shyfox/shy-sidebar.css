@@ -60,20 +60,26 @@ Styles for sidebar
 
 /* styles for sidebar */
 #sidebar-box{
-  
+
   top: calc(
-    var(--margin) / 2 
+    var(--margin) / 2
     + var(--bookmarks-hgt)
   );
 
   height: calc(
     100vh
     - var(--margin) * 2
-    + var(--margin) / 2 
+    + var(--margin) / 2
     - var(--bookmarks-hgt)
   )!important;
-  
+
   width: var(--sdbr-wdt) !important;
+
+  /* ensure sidebar content fills the full width */
+  #sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
 
 /* drag window by empty space in bookmarks toolbar */
