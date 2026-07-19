@@ -7,11 +7,6 @@ Shrink some things so they take up less space
 
 */
 
-@media not (-moz-platform: macos) {
-  .menupopup-arrowscrollbox,
-  #context-navigation > .menuitem-iconic {border-radius: var(--big-rounding) !important;}
-}
-
 #context-navigation > .menuitem-iconic[disabled="true"] {background-color: transparent !important;}
 
 menupopup > :is(menuitem, menu){
@@ -22,7 +17,6 @@ menupopup > :is(menuitem, menu){
   }
   
   max-width: 300px !important;
-  border-radius: var(--rounding) !important;
   margin: 0 !important;
   
   padding-block: 0px !important;

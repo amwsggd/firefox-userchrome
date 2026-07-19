@@ -66,7 +66,6 @@ Tab bar has been transformed into vertical toolbar on the right side of the wind
     height: var(--toolbar-item-hgt) !important;
     scale: 0.88;
     padding: 10.5px !important;
-    border-radius: calc(var(--rounding) * 1.136363636) !important;
   }
 }
 
@@ -173,13 +172,11 @@ Tab bar has been transformed into vertical toolbar on the right side of the wind
   /* styles for tabs toolbar */
   #TabsToolbar{
     top: calc(
-      var(--margin) 
+      var(--margin)
       + var(--top-margin)
       - 3px
     );
 
-    border-radius: var(--big-rounding);
-    
     /* hover target (invisible box between window edge and panel) */
     &::before{
       content: "";
@@ -208,8 +205,7 @@ Tab bar has been transformed into vertical toolbar on the right side of the wind
       width: calc(var(--margin) - var(--hide-bar-padding) * 2);
       height: calc(100% - var(--hide-bar-wdt-pad));
       top: calc(var(--hide-bar-wdt-pad) / 2);
-      
-      border-radius: var(--rounding);
+
       background-color: var(--bt-col);
       opacity: var(--hide-bar-opct);
     }
@@ -228,10 +224,9 @@ Tab bar has been transformed into vertical toolbar on the right side of the wind
     top: 0px !important;
     padding-bottom: 3px !important;
     
-    /* styled spacer */
+    /* spacer */
     toolbarspring{
       background-color: color-mix(in srgb, var(--bt-col) 15%, var(--debug-col-2)) !important;
-      border-radius: var(--rounding) !important;
       max-height: 1px !important;
       padding: 1px !important;
       scale: 0.75;
@@ -261,18 +256,15 @@ Tab bar has been transformed into vertical toolbar on the right side of the wind
     #unified-extensions-button
     {
       right: calc(var(--right-margin) + var(--margin));
-      
+
       & > *:not(.titlebar-buttonbox-container), #TabsToolbar-customization-target > * {opacity: 1 !important;}
     }
     #TabsToolbar{
       width: calc(var(--toolbar-button-wdt) + 4px) !important;
       padding-right: 0px !important;
-      
+
       background-color: var(--tb-col) !important;
-      
-      border: var(--outline) !important;
-      outline: var(--shadow) !important;
-      
+
       &::after{opacity: 0}
     }
     
@@ -307,11 +299,9 @@ Tab bar has been transformed into vertical toolbar on the right side of the wind
     bottom: 10px !important;
     right: 10px !important;
         
-    border-radius: var(--big-rounding) !important;
-    
     background-color: var(--bg-col) !important;
   }
-  
+
   #PanelUI-menu-button{
     top: 50px !important;
     right: 10px !important;

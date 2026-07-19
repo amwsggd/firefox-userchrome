@@ -87,7 +87,6 @@ Styles for sidebar
   visibility: visible !important;
   height: var(--toolbar-item-hgt) !important;
   top: 0px;
-  border-radius: var(--rounding);
   margin-left: var(--buttonbox-left-wdt);
   
   width: calc(
@@ -129,13 +128,11 @@ Styles for sidebar
     width: var(--sdbr-wdt) !important;
     
     left: calc(
-      var(--left-margin) 
-      + var(--panel-hide-ldg) 
+      var(--left-margin)
+      + var(--panel-hide-ldg)
       - var(--sdbr-wdt)
     ) !important;
 
-    border-radius: var(--big-rounding) !important;
-    
     /* hover target (invisible box between window edge and panel) */
     &::before{
       content: "";
@@ -195,14 +192,10 @@ Styles for sidebar
       );
       
       bottom: calc(var(--hide-bar-wdt-pad) / 2);
-      border-radius: var(--rounding);
       background-color: var(--bt-col);
       opacity: var(--hide-bar-opct);
     }
   }
-  
-  /* add rounded corners to sidebar content */
-  #sidebar {border-radius: var(--big-rounding) !important;}
   
   /* styles for bookmarks */
   #PersonalToolbar{
@@ -243,14 +236,11 @@ Styles for sidebar
     {
       opacity: 1 !important;
       left: calc(var(--left-margin) + var(--margin)) !important;
-      
+
       background-color: var(--bg-col) !important;
-      
-      border: var(--outline) !important;
-      outline: var(--shadow) !important;
-            
+
       &::after{opacity: 0}
-      
+
       & > * {opacity: var(--dyn-opct);}
     }
   }
@@ -267,12 +257,8 @@ Styles for sidebar
     top: 65px !important;
     left: 20px !important;
     margin-left: 0px !important;
-    
-    border-radius: var(--big-rounding) !important;
-    
-    background-color: var(--bg-col) !important;
   }
-  
+
   /* remove text from bookmarks toolbar elements placeholder */
   #bookmarks-toolbar-placeholder .toolbarbutton-text {display: none !important;}
 }
@@ -293,45 +279,6 @@ Styles when Sidebery is not opened
   #sidebar-header {display: none} 
 }
 
-/* hide sidebar button on toolbar when sidebar opened */
-#main-window:not([customizing]):has(
-  #sidebar-box:not([hidden])
-) { 
-  #sidebar-button {display: none}
-}
-
-/* color the sidebar button red */
-#sidebar-button .toolbarbutton-icon {
-  background-color: red !important;
-  fill: white !important;
-}
-
-/* notification when sidebar is not opened */
-#main-window[chromehidden=""]:has( 
-  #sidebar-box[hidden="true"]
-) {
-  --shyfox-string-open-sidebar: "Open sidebar!";
-  &[lang="ru"]{--shyfox-string-open-sidebar: "Откройте боковую панель!";}
-  
-  &::before{
-    content: var(--shyfox-string-open-sidebar);
-    position: fixed;
-    z-index: 9999;
-    
-    font-weight: bold;
-    
-    top: calc(var(--margin) + var(--toolbar-item-hgt));
-    left: calc(var(--margin) * 2);
-    
-    background-color: var(--tb-col);
-    color: var(--bt-col);
-    outline: 3px solid red;
-    
-    border-radius: var(--big-rounding);
-    padding: 10px;
-  }
-}
-
 /* styles when Sidebery is not opened but sidebar is */
 #main-window[chromehidden=""]:has(
   #sidebar-box:not([hidden]):not([sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]) 
@@ -341,7 +288,6 @@ Styles when Sidebery is not opened
   &[lang="ru"]{--shyfox-string-to-manage-tabs-open-sidebery: "Для работы с вкладками откройте Sidebery";}
   
   #sidebar {
-    border: var(--outline) !important;
     margin: 0 calc(var(--margin) / 1.5) !important;
   }
   
@@ -399,9 +345,6 @@ Styles when Sidebery is not opened
     }
   }
   
-  /* add rounded corners to sidebar content */
-  #sidebar {border-radius: var(--big-rounding) !important;}
-  
   /* sidebar on left (native tabs disabled, default) */
   &:has(#sidebar-box[style*="order: 2"]){
     /* there is no styles */
@@ -435,11 +378,8 @@ Styles when Sidebery is not opened
       top:  calc(var(--top-margin)  + var(--margin)) !important;
       
       background-color: var(--tb-col) !important;
-      border-radius: var(--big-rounding) !important;
-      border: var(--outline) !important;
-      outline: var(--shadow) !important;
       transition: var(--transition) !important;
-      
+
       .tabbrowser-tab:not([pinned]){
         min-width: 150px !important;
         .tab-close-button{display: flex !important;}
