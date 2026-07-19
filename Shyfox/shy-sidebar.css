@@ -74,12 +74,6 @@ Styles for sidebar
   )!important;
 
   width: var(--sdbr-wdt) !important;
-
-  /* ensure sidebar content fills the full width */
-  #sidebar {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
 }
 
 /* drag window by empty space in bookmarks toolbar */
@@ -283,6 +277,13 @@ Styles when Sidebery is not opened
   #sidebar-box:not([hidden])[sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]
 ) { 
   #sidebar-header {display: none} 
+}
+
+/* hide sidebar button on toolbar when sidebar opened */
+#main-window:not([customizing]):has(
+  #sidebar-box:not([hidden])
+) {
+  #sidebar-button {display: none}
 }
 
 /* styles when Sidebery is not opened but sidebar is */
