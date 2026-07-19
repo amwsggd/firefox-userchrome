@@ -65,18 +65,11 @@ Essential variables for navbar layout, animations, and color references.
   --toolbar-item-hgt: 40px;
   --hide-bar-padding: 3px;
 
-  /* hiding the window border in fullscreen mode and assigning --margin to it in windowed mode */
+  /* browser content margins (0 by default, navbar overrides --top-margin when shown) */
   --left-margin:   0px;
   --right-margin:  0px;
   --top-margin:    0px;
   --bottom-margin: 0px;
-
-  &:not(:is([inFullscreen="true"], [inDOMFullscreen="true"], [titlepreface*="‍"]:is([sizemode="maximized"], [gtktiledwindow="true"]))) {
-    --left-margin:   var(--margin);
-    --right-margin:  var(--margin);
-    --top-margin:    var(--margin);
-    --bottom-margin: var(--margin);
-  }
 
   /* hide indication bars in fullscreen or clean mode */
   &:is([inFullscreen="true"], [inDOMFullscreen="true"], [titlepreface*="‍"]) {

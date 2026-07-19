@@ -1,60 +1,35 @@
 /*== ShyFox Navbar (stripped) ================================================================================
 
-Navigation bar hide/show via titlepreface "‌" with animations.
-Width calculations simplified (no sidebar/toolbar).
+Navbar: Firefox native when shown, hide/reveal when hidden via titlepreface "‌".
 */
 
 /* local variables */
-:root{
+:root {
   --navbar-real-wdt: var(--navbar-wdt);
 }
 
-/* if navbar is not hidden, this window is not floating popup and not in fullscreen video */
-#main-window:not(:is([titlepreface*="‌"], [titlepreface*="‍"]))[chromehidden=""]:not([inDOMFullscreen="true"]){
-  /* set top margin to navbar height */
-  --top-margin: calc(var(--toolbar-item-hgt)) !important;
-}
-
 /* padding tweak */
-.toolbaritem-combined-buttons:not([widget-type="button-and-view"], [widget-type="custom"]), .toolbaritem-menu-buttons {
+.toolbaritem-combined-buttons:not([widget-type="button-and-view"], [widget-type="custom"]),
+.toolbaritem-menu-buttons {
   margin-inline-end: var(--toolbar-start-end-padding) !important;
 }
-#nav-bar-overflow-button {margin-inline-end: calc(var(--toolbar-start-end-padding) / 2) !important;}
+#nav-bar-overflow-button {
+  margin-inline-end: calc(var(--toolbar-start-end-padding) / 2) !important;
+}
 
 /* limit items height */
-#nav-bar-customization-target > * {max-height: var(--toolbar-item-hgt) !important;}
-#nav-bar-customization-target {height: var(--toolbar-item-hgt) !important;}
+#nav-bar-customization-target > * { max-height: var(--toolbar-item-hgt) !important; }
+#nav-bar-customization-target { height: var(--toolbar-item-hgt) !important; }
 
 #downloadsFooterButtons toolbarseparator {
   margin-top: 6px !important;
   padding-bottom: 2px !important;
 }
 
-/*
---- NAVBAR SHOWN --------------------------------------------------------------------------------------------
-*/
-
-#nav-bar{
-  position: fixed !important;
-  z-index: 3 !important;
-
-  transition: var(--transition) !important;
-
-  background-color: transparent !important;
-  border-top: 0px solid transparent !important;
-
-  top: 0px;
-  left: var(--left-margin) !important;
-  right: auto !important;
-
-  /* simple width: full window minus margins */
-  width: calc(100vw - var(--left-margin) - var(--right-margin)) !important;
-
-  & > * {opacity: var(--dyn-opct);}
-}
-
-/* tab loading progress in urlbar background */
-#main-window:not([customizing]):not([titlepreface*="‌"]):has(.tabbrowser-tab[selected][busy]) #urlbar:not([breakout-extend]) #urlbar-background{
+/* tab loading progress in urlbar background (shown state only) */
+#main-window:not([customizing]):not([titlepreface*="‌"]):has(.tabbrowser-tab[selected][busy])
+  #urlbar:not([breakout-extend])
+  #urlbar-background {
   background: linear-gradient(
     to right,
     color-mix(in srgb, var(--shy-color) 10%, transparent) 0 var(--shy-tab-load-pcent),
@@ -66,43 +41,33 @@ Width calculations simplified (no sidebar/toolbar).
 --- NAVBAR HIDDEN -------------------------------------------------------------------------------------------
 */
 
-/* activate style when navbar hidden or clean mode enabled (and not in customizing page) */
-#main-window:is([titlepreface*="‌"], [titlepreface*="‍"]):not([customizing]){
-
-  #nav-bar{
+/* activate when navbar hidden or clean mode (not customizing) */
+#main-window:is([titlepreface*="‌"], [titlepreface*="‍"]):not([customizing]) {
+  #nav-bar {
+    position: fixed !important;
     overflow: visible !important;
     z-index: 4 !important;
 
     width: var(--navbar-real-wdt) !important;
-    max-width: calc(
-      100vw
-      - var(--left-margin)
-      - var(--right-margin)
-    );
+    max-width: calc(100vw - var(--left-margin) - var(--right-margin));
 
-    top: calc(
-      var(--margin)
-      + var(--panel-hide-ldg)
-      - var(--toolbar-item-hgt)
-    );
+    top: calc(var(--margin) + var(--panel-hide-ldg) - var(--toolbar-item-hgt));
 
     left: calc(
-      (
-        100vw
-        - var(--navbar-real-wdt)
-      ) / 2
+      (100vw - var(--navbar-real-wdt) + var(--left-margin) - var(--right-margin)) / 2
     ) !important;
 
-    /* make all panel content invisible (visible on hover) */
+    transition: var(--transition) !important;
+
+    /* make panel content invisible (visible on hover) */
     #nav-bar-customization-target > *:not(#unified-extensions-button),
-    #nav-bar-overflow-button
-    {
-       transition: var(--transition) !important;
-       opacity: 0 !important;
+    #nav-bar-overflow-button {
+      transition: var(--transition) !important;
+      opacity: 0 !important;
     }
 
-    /* hover target (invisible box between window edge and panel) */
-    #nav-bar-customization-target::before{
+    /* hover target (invisible box below panel to window edge) */
+    #nav-bar-customization-target::before {
       content: "";
       position: absolute;
       z-index: -999;
@@ -113,17 +78,12 @@ Width calculations simplified (no sidebar/toolbar).
     }
 
     /* indication bar (line on window edge) */
-    &::before{
+    &::before {
       content: "";
       position: absolute;
       transition: var(--transition);
 
-      top: calc(
-        100%
-        - var(--panel-hide-ldg)
-        - var(--margin)
-        + var(--hide-bar-padding)
-      );
+      top: calc(100% - var(--panel-hide-ldg) - var(--margin) + var(--hide-bar-padding));
 
       height: calc(var(--margin) - var(--hide-bar-padding) * 2);
       width: calc(100% - var(--hide-bar-wdt-pad));
@@ -134,8 +94,8 @@ Width calculations simplified (no sidebar/toolbar).
     }
   }
 
-  /* tab loading progress bar */
-  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::before{
+  /* tab loading progress bar on indication bar */
+  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::before {
     background: linear-gradient(
       to right,
       var(--shy-color) 0 var(--shy-tab-load-pcent),
@@ -144,7 +104,7 @@ Width calculations simplified (no sidebar/toolbar).
   }
 
   /* tab loading progress on whole panel */
-  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::after{
+  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::after {
     content: "";
     position: absolute;
     pointer-events: none;
@@ -160,8 +120,8 @@ Width calculations simplified (no sidebar/toolbar).
     );
   }
 
-  /* hotfix */
-  #urlbar{
+  /* hotfix: hide urlbar, show placeholder */
+  #urlbar {
     visibility: collapse;
   }
 
@@ -182,62 +142,44 @@ Width calculations simplified (no sidebar/toolbar).
     #nav-bar-overflow-button[open],
     #nav-bar-overflow-button:hover
   ) {
-    #nav-bar{
+    #nav-bar {
+      top: 0px;
 
-      /* hotfix */
-      #urlbar{
+      background-color: var(--tb-col) !important;
+
+      /* hotfix: show urlbar */
+      #urlbar {
         visibility: visible !important;
         transition: visibility 0s linear var(--trans-dur);
         min-width: var(--urlbar-width) !important;
       }
 
-      top: 0px;
-
-      background-color: var(--tb-col) !important;
-
       #nav-bar-customization-target > *:not([disabled="true"]),
-      #nav-bar-overflow-button {opacity: 1 !important;}
-      #nav-bar-customization-target > *[disabled="true"] {opacity: 0.5 !important;}
+      #nav-bar-overflow-button {
+        opacity: 1 !important;
+      }
+      #nav-bar-customization-target > *[disabled="true"] {
+        opacity: 0.5 !important;
+      }
 
-      &::before {opacity: 0;}
-      &::after {opacity: 0.1;} /* tab load progress indicator */
+      &::before { opacity: 0; }
+      &::after { opacity: 0.1; } /* tab load progress indicator */
     }
   }
 
-  /* hide all in clean mode */
-  &[titlepreface*="‍"]{
-    #nav-bar-customization-target > *:not(#urlbar-container, #unified-extensions-button) {display: none !important;}
+  /* hide extra items in clean mode */
+  &[titlepreface*="‍"] {
+    #nav-bar-customization-target > *:not(#urlbar-container, #unified-extensions-button) {
+      display: none !important;
+    }
   }
 
-  /* adaptive navbar width */
+  /* adaptive navbar width on small screens */
   @media (max-width: 1000px) {
-    #nav-bar{
-      --navbar-real-wdt: calc(
-        100vw
-        - var(--margin) * 2
-      ) !important;
-
+    #nav-bar {
+      --navbar-real-wdt: calc(100vw - var(--margin) * 2) !important;
       max-width: none !important;
       left: var(--margin) !important;
     }
   }
-}
-
-/*
---- CUSTOMIZING PAGE ----------------------------------------------------------------------------------------
-*/
-
-#main-window[customizing]{
-  #nav-bar{
-    left: 140px !important;
-    right: 140px !important;
-
-    width: calc(100vw - 280px) !important;
-
-    top: var(--margin) !important;
-
-    background-color: var(--bg-col) !important;
-  }
-
-  #urlbar-background, #searchbar {background-color: var(--tb-col) !important;}
 }
