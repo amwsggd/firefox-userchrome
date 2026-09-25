@@ -1,17 +1,16 @@
 # ShyFox (Simplified)
 
-A streamlined Firefox userChrome theme based on [ShyFox](https://github.com/Naezr/ShyFox), focused on **hiding the navbar** (address bar + navigation buttons) via keyboard shortcuts. All style customizations, sidebar/toolbar panel management, and color overrides have been stripped out — Firefox keeps its native appearance.
+A streamlined Firefox userChrome theme based on [ShyFox](https://github.com/Naezr/ShyFox), focused on **manually hiding or showing the navbar** (address bar + navigation buttons) via keyboard shortcuts. The shown state keeps Firefox's native appearance. The toggle has no animation or hover behavior, which avoids relying on unstable address-bar internals.
 
 ## What This Does
 
 | Feature | Behavior |
 |---------|----------|
 | **Navbar Toggle** | Hide or show the URL bar + navigation buttons via shortcut |
-| **Clean Mode** | Hide the navbar entirely except URL bar + extensions button |
+| **Clean Mode** | Compatibility alias that also hides or shows the navbar |
 | **Compact Menus** | Smaller context menus, grid layout for extensions panel |
-| **Tab Progress** | Loading progress bar shown on the navbar when tabs load |
 
-Everything else — sidebar, tabs, toolbar, window controls, colors — stays **exactly as Firefox's default**.
+The navbar's shown state uses Firefox's native styling. Compact menu rules remain a separate, optional module.
 
 ## How It Works
 
@@ -19,23 +18,32 @@ The theme toggles panel visibility by adding or removing **invisible Unicode cha
 
 | Character | Unicode | Titlepreface | Effect |
 |-----------|---------|-------------|--------|
-| `‌` | U+200C | Zero Width Non-Joiner | **Navbar hidden** — navbar slides up, shows indicator bar; hover or focus URL bar to reveal |
-| `‍` | U+200D | Zero Width Joiner | **Clean mode** — navbar hidden with only URL bar + extensions visible |
+| `‌` | U+200C | Zero Width Non-Joiner | **Navbar hidden** — use the same shortcut again to show it |
+| `‍` | U+200D | Zero Width Joiner | **Compatibility mode** — also hides the navbar |
 
 When **no** special character is in the title, the navbar behaves like Firefox's normal navbar.
 
 ### Detail: Navbar Hidden (`‌`)
 
-- The navbar slides up off-screen, leaving a thin **indicator bar** at the top of the window
-- The indicator bar shows the theme color (or tab loading progress when a tab is loading)
-- **Hover** the mouse near the top edge of the window to reveal the navbar
-- **Focus** the URL bar (e.g. `Cmd+L` / `Ctrl+L`) to reveal the navbar
-- The navbar appears as a centered floating panel with full functionality
+- The navbar is moved off-screen immediately, without an animation
+- There is no hover-to-reveal behavior or indicator bar
+- Press the configured Userchrome Toggle Extended shortcut again to show it
+- `Cmd+L` / `Ctrl+L` does not force the navbar to appear while the toggle is hidden
+- The URL bar retains a layout box internally for compatibility with current Firefox
 
 ### Detail: Clean Mode (`‍`)
 
-- Same as Navbar Hidden, but **extra navbar items are hidden**
-- Only the URL bar container and extensions button remain visible on reveal
+The historical Clean Mode marker is retained so existing extension settings keep working. In this simplified build it has the same behavior as Hide Navbar.
+
+## Compatibility Strategy
+
+- The critical navbar rules use flat selectors and avoid CSS nesting, `:is()`, and `:has()` so older Firefox parsers can read them.
+- The toggle depends only on the extension's established U+200C/U+200D `titlepreface` markers and the long-lived `#nav-bar`, `#urlbar-container`, and `#urlbar` elements.
+- Popup detection no longer uses `chromehidden`; only real DOM fullscreen hides the entire toolbox.
+- Unknown future DOM changes fail open: if Firefox renames a target, the navbar stays visible instead of leaving the browser without an address bar.
+- Compact menu styling is isolated in its own module and cannot disable the navbar toggle if those optional selectors change.
+
+Firefox's chrome DOM is not a stable public API, so no `userChrome.css` theme can guarantee compatibility with every future release. The rules above minimize that risk and keep failures recoverable.
 
 ---
 
@@ -72,7 +80,13 @@ Copy the entire contents of this directory into the `chrome/` folder inside your
 
 ### 4. Verify
 
-After restarting, you should see the navbar at the top as usual. If it looks normal, the installation is successful. The navbar won't hide yet — you need keyboard shortcuts for that (see below).
+After restarting, run this short smoke test:
+
+1. Confirm the navbar is visible before using a toggle.
+2. Press the configured shortcut and confirm the navbar is hidden.
+3. Press it again and confirm the navbar returns and accepts typing.
+4. Open a popup window and confirm its native controls are unchanged.
+5. Enter and exit a website's fullscreen mode and confirm the normal navbar returns afterward.
 
 ---
 
@@ -101,24 +115,14 @@ Once set, press your shortcut to hide the navbar. Press again to show it. That's
 
 ## Customization
 
-Edit `Shyfox/shy-variables.css` to adjust:
-
-```css
-:root {
-  --margin: 0.8rem;          /* Gap size around navbar when hidden */
-  --trans-dur: 0.25s;        /* Animation speed */
-  --navbar-wdt: 60vw;        /* Width of navbar when hidden/floating */
-  --hide-bar-opct: 0.2;      /* Opacity of the indicator bar */
-  --shy-accent-color: #3584E4; /* Accent color for progress bars */
-}
-```
+The manual navbar toggle intentionally has no animation, hover target, indicator, width option, or color override. This keeps it independent of Firefox's changing address-bar animation internals.
 
 ### Disable Compact Menus
 
 If you don't want the compact menu styles, remove this line from `userChrome.css`:
 
 ```css
-@import url("ShyFox/shy-compact.css");
+@import url("Shyfox/shy-compact.css");
 ```
 
 ### Disable Compact Extensions Panel Only
@@ -137,7 +141,7 @@ Set `shyfox.larger.context.menu` to `true` in `about:config`.
 chrome/
 ├── userChrome.css                 # Entry point — imports modules
 └── Shyfox/
-    ├── shy-variables.css          # Variables: sizes, colors, animation speed
+    ├── shy-variables.css          # Minimal shared layout variables
     ├── shy-global.css             # Global layout, z-index, window drag, fixes
     ├── shy-navbar.css             # Navbar show/hide toggle & clean mode
     └── shy-compact.css            # Compact context menus, extension panel
@@ -155,7 +159,7 @@ Disabled (left as empty placeholders):
 
 ## Credits
 
-This is a stripped-down version of [ShyFox](https://github.com/Naezr/ShyFox) by Naezr. The original ShyFox is a comprehensive theme that transforms Firefox's entire interface with auto-hiding panels, vertical tabs, and custom styling. This version preserves only the navbar auto-hide mechanism while removing all visual customizations, sidebar/toolbar panel management, and color overrides.
+This is a stripped-down version of [ShyFox](https://github.com/Naezr/ShyFox) by Naezr. The original ShyFox is a comprehensive theme that transforms Firefox's entire interface with auto-hiding panels, vertical tabs, and custom styling. This version preserves a manual navbar toggle while removing its hover/animation behavior, sidebar/toolbar panel management, and color overrides.
 
 ## License
 

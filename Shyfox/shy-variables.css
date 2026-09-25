@@ -1,92 +1,13 @@
-/*== ShyFox Variables (stripped) ===============================================================================
+/*== ShyFox Variables (minimal) ===============================================================================
 
-Essential variables for navbar layout, animations, and color references.
+Only variables still used by the stripped global layout are kept here. The
+manual navbar toggle deliberately has no timing, hover, width, or color knobs.
 */
 
 :root {
-  /* accent color */
-  --shy-accent-color: #3584E4;
-
-  /* window border thickness and size of many margins */
-  --margin: 0.8rem;
-
-  /* animations time */
-  --trans-dur: 0.25s;
-
-  /* navbar width when hidden */
-  --navbar-wdt: 60vw;
-
-  /* transparency of indicator bars showing the position of hidden panels */
-  --hide-bar-opct: 0.2;
-  &:-moz-window-inactive {--hide-bar-opct: 0.1;}
-
-  /* how much shorter indicator bars are than panels */
-  --hide-bar-wdt-pad: 10px;
-
-  /* size of the panel hitbox outside the window border */
-  --panel-hide-ldg: 1px;            /* f11 fullscreen   */
-  &:not([inFullscreen="true"]) {
-    --panel-hide-ldg: 0px;          /* maximized window */
-    &[sizemode="normal"]:not([titlepreface*="‍"]) {
-      --panel-hide-ldg: 9px;        /* floating window  */
-    }
-  }
-
-  /* colors */
-  --shadow-col:  #00000020;
-  --debug-col: transparent;
-  --debug-col-2: transparent;
-}
-
-/* accent color */
-:root {--shy-color: var(--shy-accent-color)}
-
-/*
---- VARIABLES ------------------------------------------------------------------------------------------------
-*/
-
-:root {
-  --ActiveCaption: ActiveCaption;
-
-  /* pick browser colors */
-  --bg-col: var(--lwt-accent-color, var(--ActiveCaption, tomato));
-  --tb-col: var(--toolbar-bgcolor, tomato);
-  --bt-col: var(--toolbarbutton-icon-fill);
-  --pp-col: var(--arrowpanel-background);
-
-  /* dynamic opacity */
-  --dyn-opct: 1;
-  &:-moz-window-inactive {--dyn-opct: 0.7;}
-
-  /* shared shortcuts for commonly used parameters */
-  --transition: all var(--trans-dur) ease-out;
-
-  /* constant variables */
-  --toolbar-item-hgt: 40px;
-  --hide-bar-padding: 3px;
-
-  /* browser content margins (0 by default, navbar overrides --top-margin when shown) */
-  --left-margin:   0px;
-  --right-margin:  0px;
-  --top-margin:    0px;
+  --left-margin: 0px;
+  --right-margin: 0px;
+  --top-margin: 0px;
   --bottom-margin: 0px;
-
-  /* hide indication bars in fullscreen or clean mode */
-  &:is([inFullscreen="true"], [inDOMFullscreen="true"], [titlepreface*="‍"]) {
-    --hide-bar-opct: 0 !important;
-  }
-
-  /* override one padding in navbar to match style */
-  --toolbar-start-end-padding: calc(var(--margin) / 2) !important;
-
-  /* fix bookmark toolbar */
-  --bookmarks-toolbar-overlapping-browser-height: 0px !important;
-}
-
-/* current tab loading progress */
-#main-window{
-  &:has(.tabbrowser-tab[selected][busy]                        ){--shy-tab-load-pcent: 20%;}
-  &:has(.tabbrowser-tab[selected][busy][pendingicon]           ){--shy-tab-load-pcent: 50%;}
-  &:has(.tabbrowser-tab[selected][busy][pendingicon][progress] ){--shy-tab-load-pcent: 85%;}
-  &:has(.tabbrowser-tab[selected][busy][progress]              ){--shy-tab-load-pcent: 95%;}
+  --debug-col-2: transparent;
 }

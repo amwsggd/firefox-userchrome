@@ -1,185 +1,50 @@
-/*== ShyFox Navbar (stripped) ================================================================================
+/*== ShyFox Navbar (manual toggle, no animation) ==============================================================
 
-Navbar: Firefox native when shown, hide/reveal when hidden via titlepreface "‌".
+Userchrome Toggle Extended writes invisible characters to the Firefox window's
+titlepreface attribute. Keep both historical ShyFox markers compatible:
+
+  U+200C (\200C) - Hide Navbar
+  U+200D (\200D) - Clean Mode / Hide Navbar
+
+The hidden navbar stays laid out off-screen instead of being removed from
+layout. Firefox 156 needs the urlbar to retain a box when its keyboard-focus
+and popover code measures the element.
+
+This critical path intentionally uses flat, conservative selectors without
+modern selector helpers. Older Firefox versions can parse it, while a future
+DOM change fails open (the navbar remains visible) instead of hiding the UI.
 */
 
-/* local variables */
-:root {
-  --navbar-real-wdt: var(--navbar-wdt);
-}
+/* Leave the shown state completely native. */
 
-/* padding tweak */
-.toolbaritem-combined-buttons:not([widget-type="button-and-view"], [widget-type="custom"]),
-.toolbaritem-menu-buttons {
-  margin-inline-end: var(--toolbar-start-end-padding) !important;
-}
-#nav-bar-overflow-button {
-  margin-inline-end: calc(var(--toolbar-start-end-padding) / 2) !important;
-}
+#main-window[titlepreface*="\200C"]:not([customizing]) #nav-bar,
+#main-window[titlepreface*="\200D"]:not([customizing]) #nav-bar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  width: 100vw !important;
+  max-width: none !important;
 
-/* limit items height */
-#nav-bar-customization-target > * { max-height: var(--toolbar-item-hgt) !important; }
-#nav-bar-customization-target { height: var(--toolbar-item-hgt) !important; }
-
-#downloadsFooterButtons toolbarseparator {
-  margin-top: 6px !important;
-  padding-bottom: 2px !important;
-}
-
-/* tab loading progress in urlbar background (shown state only) */
-#main-window:not([customizing]):not([titlepreface*="‌"]):has(.tabbrowser-tab[selected][busy])
-  #urlbar:not([breakout-extend])
-  #urlbar-background {
-  background: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--shy-color) 10%, transparent) 0 var(--shy-tab-load-pcent),
-    color-mix(in srgb, var(--bt-col) 10%, transparent) var(--shy-tab-load-pcent) 100%
-  ) !important;
+  /* Keep geometry available to Firefox, but keep the navbar off-screen. */
+  transform: translateY(-100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: 4 !important;
+  transition: none !important;
+  animation: none !important;
 }
 
 /*
---- NAVBAR HIDDEN -------------------------------------------------------------------------------------------
-*/
-
-/* activate when navbar hidden or clean mode (not customizing) */
-#main-window:is([titlepreface*="‌"], [titlepreface*="‍"]):not([customizing]) {
-  #nav-bar {
-    position: fixed !important;
-    overflow: visible !important;
-    z-index: 4 !important;
-
-    width: var(--navbar-real-wdt) !important;
-    max-width: calc(100vw - var(--left-margin) - var(--right-margin));
-
-    top: calc(var(--margin) + var(--panel-hide-ldg) - var(--toolbar-item-hgt));
-
-    left: calc(
-      (100vw - var(--navbar-real-wdt) + var(--left-margin) - var(--right-margin)) / 2
-    ) !important;
-
-    transition: var(--transition) !important;
-
-    /* make panel content invisible (visible on hover) */
-    #nav-bar-customization-target > *:not(#unified-extensions-button),
-    #nav-bar-overflow-button {
-      transition: var(--transition) !important;
-      opacity: 0 !important;
-    }
-
-    /* hover target (invisible box below panel to window edge) */
-    #nav-bar-customization-target::before {
-      content: "";
-      position: absolute;
-      z-index: -999;
-      background-color: var(--debug-col);
-      height: 500%;
-      width: 100%;
-      bottom: 0px;
-    }
-
-    /* indication bar (line on window edge) */
-    &::before {
-      content: "";
-      position: absolute;
-      transition: var(--transition);
-
-      top: calc(100% - var(--panel-hide-ldg) - var(--margin) + var(--hide-bar-padding));
-
-      height: calc(var(--margin) - var(--hide-bar-padding) * 2);
-      width: calc(100% - var(--hide-bar-wdt-pad));
-      left: calc(var(--hide-bar-wdt-pad) / 2);
-
-      background-color: var(--bt-col);
-      opacity: var(--hide-bar-opct);
-    }
-  }
-
-  /* tab loading progress bar on indication bar */
-  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::before {
-    background: linear-gradient(
-      to right,
-      var(--shy-color) 0 var(--shy-tab-load-pcent),
-      var(--bt-col) var(--shy-tab-load-pcent) 100%
-    ) !important;
-  }
-
-  /* tab loading progress on whole panel */
-  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-    z-index: -999;
-    width: 100%;
-    height: 100%;
-    bottom: 0px;
-    opacity: 0;
-    background: linear-gradient(
-      to right,
-      var(--shy-color) 0 var(--shy-tab-load-pcent),
-      transparent var(--shy-tab-load-pcent) 100%
-    );
-  }
-
-  /* hotfix: hide urlbar, show placeholder */
-  #urlbar {
-    visibility: collapse;
-  }
-
-  #urlbar-container::before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    background-color: var(--toolbar-field-background-color);
-  }
-
-  /* show navbar on hover or focus */
-  &:has(
-    #nav-bar-customization-target:hover #unified-extensions-button:not(:hover),
-    #nav-bar-customization-target *:not(:is(#unified-extensions-button, #firefox-view-button))[open],
-    #nav-bar-customization-target #searchbar:focus-within,
-    #urlbar:focus-within,
-    #urlbar[breakout][breakout-extend],
-    #nav-bar-overflow-button[open],
-    #nav-bar-overflow-button:hover
-  ) {
-    #nav-bar {
-      top: 0px;
-
-      background-color: var(--tb-col) !important;
-
-      /* hotfix: show urlbar */
-      #urlbar {
-        visibility: visible !important;
-        transition: visibility 0s linear var(--trans-dur);
-        min-width: var(--urlbar-width) !important;
-      }
-
-      #nav-bar-customization-target > *:not([disabled="true"]),
-      #nav-bar-overflow-button {
-        opacity: 1 !important;
-      }
-      #nav-bar-customization-target > *[disabled="true"] {
-        opacity: 0.5 !important;
-      }
-
-      &::before { opacity: 0; }
-      &::after { opacity: 0.1; } /* tab load progress indicator */
-    }
-  }
-
-  /* hide extra items in clean mode */
-  &[titlepreface*="‍"] {
-    #nav-bar-customization-target > *:not(#urlbar-container, #unified-extensions-button) {
-      display: none !important;
-    }
-  }
-
-  /* adaptive navbar width on small screens */
-  @media (max-width: 1000px) {
-    #nav-bar {
-      --navbar-real-wdt: calc(100vw - var(--margin) * 2) !important;
-      max-width: none !important;
-      left: var(--margin) !important;
-    }
-  }
+ * The urlbar can enter the top layer as a popover in current Firefox. Target
+ * both its long-lived container and the urlbar itself as a compatibility pair.
+ */
+#main-window[titlepreface*="\200C"]:not([customizing]) #urlbar-container,
+#main-window[titlepreface*="\200D"]:not([customizing]) #urlbar-container,
+#main-window[titlepreface*="\200C"]:not([customizing]) #urlbar,
+#main-window[titlepreface*="\200D"]:not([customizing]) #urlbar {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: none !important;
+  animation: none !important;
 }

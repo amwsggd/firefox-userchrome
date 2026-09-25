@@ -9,30 +9,40 @@ Shrink some things so they take up less space
 
 #context-navigation > .menuitem-iconic[disabled="true"] {background-color: transparent !important;}
 
-menupopup > :is(menuitem, menu){
+menupopup > menuitem,
+menupopup > menu {
   height: fit-content !important;
-  & > * {
-    padding: 0px !important;
-    margin: 1px !important;
-  }
-  
   max-width: 300px !important;
   margin: 0 !important;
-  
   padding-block: 0px !important;
   padding-inline-start: 5px !important;
 }
 
+menupopup > menuitem > *,
+menupopup > menu > * {
+  padding: 0px !important;
+  margin: 1px !important;
+}
+
 /* large context menu */
 @media (-moz-bool-pref: "shyfox.larger.context.menu"){
-  menupopup > :is(menuitem, menu) > * {padding: 5px 0px !important;}
+  menupopup > menuitem > *,
+  menupopup > menu > * {padding: 5px 0px !important;}
 }
 
 /* margin for some menus */
-:is(.bookmark-item, #PlacesChevron, #bookmarks-menu-button, #sidebarMenu-popup) :is(menuitem, menu) {margin-inline: 5px !important;}
+.bookmark-item menuitem,
+.bookmark-item menu,
+#PlacesChevron menuitem,
+#PlacesChevron menu,
+#bookmarks-menu-button menuitem,
+#bookmarks-menu-button menu,
+#sidebarMenu-popup menuitem,
+#sidebarMenu-popup menu {margin-inline: 5px !important;}
 
 /* remove some items from sidebar header menu */
-#sidebarMenu-popup :is(menuitem[data-l10n-id="sidebar-menu-close"], menuseparator:nth-last-of-type(1)) {display: none}
+#sidebarMenu-popup menuitem[data-l10n-id="sidebar-menu-close"],
+#sidebarMenu-popup menuseparator:nth-last-of-type(1) {display: none}
 /* 
 
 --- EXTENSIONS MENU ---------------------------------------------------------------------------------------------------------------------------------
@@ -40,49 +50,42 @@ menupopup > :is(menuitem, menu){
 */
 
 @media not (-moz-bool-pref: "shyfox.disable.compact.unified.extensions") {
-
-  #unified-extensions-view{
-
+  #unified-extensions-view {
     --uei-icon-size: 24px;
     --extensions-in-row: 4;
-
     width: 100% !important;
-    :is(
-      toolbarseparator,
-      .unified-extensions-item-menu-button.subviewbutton,
-      .unified-extensions-item-action-button .unified-extensions-item-contents
-    ) {display: none !important;}
-
-    :is(
-      #overflowed-extensions-list,
-      #unified-extensions-area,
-      .unified-extensions-list 
-    ){
-      display: grid !important;
-      grid-template-columns: repeat(var(--extensions-in-row),auto);
-      justify-items: center !important;
-      align-items: center !important;
-    }
-
-    :is(
-      :is(
-        #unified-extensions-area,
-        .unified-extensions-list
-      ) .unified-extensions-item,
-      .unified-extensions-list
-    ){max-width: max-content;}
-
-    #unified-extensions-area {
-      margin-bottom: 5px !important;
-      border-top: 1px solid var(--panel-separator-color);
-      border-bottom: 1px solid var(--panel-separator-color);
-      padding-top: 5px !important;
-      padding-bottom: 5px !important;
-    }
-    
-    .unified-extensions-item[attention] > .unified-extensions-item-action-button.subviewbutton {
-      background-position: left calc(var(--uei-dot-horizontal-position-in-panel) - 4px) bottom var(--uei-dot-vertical-position-in-panel) !important;
-    }
-    .unified-extensions-item-action-button {padding-right: 3px !important;}
   }
+
+  #unified-extensions-view toolbarseparator,
+  #unified-extensions-view .unified-extensions-item-menu-button.subviewbutton,
+  #unified-extensions-view .unified-extensions-item-action-button .unified-extensions-item-contents {
+    display: none !important;
+  }
+
+  #unified-extensions-view #overflowed-extensions-list,
+  #unified-extensions-view #unified-extensions-area,
+  #unified-extensions-view .unified-extensions-list {
+    display: grid !important;
+    grid-template-columns: repeat(var(--extensions-in-row), auto);
+    justify-items: center !important;
+    align-items: center !important;
+  }
+
+  #unified-extensions-view #unified-extensions-area .unified-extensions-item,
+  #unified-extensions-view .unified-extensions-list .unified-extensions-item,
+  #unified-extensions-view .unified-extensions-list {max-width: max-content;}
+
+  #unified-extensions-view #unified-extensions-area {
+    margin-bottom: 5px !important;
+    border-top: 1px solid var(--panel-separator-color);
+    border-bottom: 1px solid var(--panel-separator-color);
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  #unified-extensions-view .unified-extensions-item[attention] > .unified-extensions-item-action-button.subviewbutton {
+    background-position: left calc(var(--uei-dot-horizontal-position-in-panel) - 4px) bottom var(--uei-dot-vertical-position-in-panel) !important;
+  }
+
+  #unified-extensions-view .unified-extensions-item-action-button {padding-right: 3px !important;}
 }

@@ -15,16 +15,10 @@ Area where website is displayed
   margin-right: var(--right-margin) !important;
   margin-top: var(--top-margin) !important;
   margin-bottom: var(--bottom-margin) !important;
-
-  /* add smoothness to it */
-  transition: var(--transition) !important;
 }
 
-/* completely remove the browser interface in fullscreen videos and popups */
-#main-window:is(:not([chromehidden=""]), [inDOMFullscreen="true"]){
-  #navigator-toolbox {display: none !important;}
-  --margin: 0px !important;
-}
+/* completely remove the browser interface in DOM fullscreen */
+#main-window[inDOMFullscreen="true"] #navigator-toolbox {display: none !important;}
 
 /* some z-index */
 #navigator-toolbox {z-index: 2 !important;}
@@ -104,20 +98,10 @@ Drag window using border
 }
 
 /* weird margin fix */
-#tabbrowser-tabpanels {
-  & browser[type="content"] {
-    margin: 0 !important;
-  }
-}
+#tabbrowser-tabpanels browser[type="content"] {margin: 0 !important;}
 
 /* z-index fix */
 #tabbrowser-tabbox{z-index: 1 !important;}
-
-/* border fix */
-* {
-  border: 0px solid transparent;
-  outline: 0px solid transparent;
-}
 
 /* customizing page fix */
 :root[customizing] .customization-target:not(#widget-overflow-fixed-list) {min-width: 0px !important;}
